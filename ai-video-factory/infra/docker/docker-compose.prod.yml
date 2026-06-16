@@ -1,0 +1,126 @@
+services:
+  # ---- API Gateway ----
+  api:
+    build:
+      context: ../..
+      dockerfile: apps/api/Dockerfile
+    container_name: aif-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-aifactory}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aifactory_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-ai_video_factory}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MILVUS_HOST: milvus
+      MILVUS_PORT: 19530
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ---- Workflow Worker ----
+  workflow-worker:
+    build:
+      context: ../..
+      dockerfile: apps/worker/Dockerfile
+    container_name: aif-workflow-worker
+    restart: unless-stopped
+    command: ["npx", "tsx", "apps/worker/workflow-worker/src/main.ts"]
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-aifactory}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aifactory_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-ai_video_factory}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MILVUS_HOST: milvus
+      MILVUS_PORT: 19530
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ---- Analysis Worker ----
+  analysis-worker:
+    build:
+      context: ../..
+      dockerfile: apps/worker/Dockerfile
+    container_name: aif-analysis-worker
+    restart: unless-stopped
+    command: ["npx", "tsx", "apps/worker/analysis-worker/src/main.ts"]
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MILVUS_HOST: milvus
+      MILVUS_PORT: 19530
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ---- Embedding Worker ----
+  embedding-worker:
+    build:
+      context: ../..
+      dockerfile: apps/worker/Dockerfile
+    container_name: aif-embedding-worker
+    restart: unless-stopped
+    command: ["npx", "tsx", "apps/worker/embedding-worker/src/main.ts"]
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MILVUS_HOST: milvus
+      MILVUS_PORT: 19530
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ---- Render Worker ----
+  render-worker:
+    build:
+      context: ../..
+      dockerfile: apps/worker/Dockerfile
+    container_name: aif-render-worker
+    restart: unless-stopped
+    command: ["npx", "tsx", "apps/worker/render-worker/src/main.ts"]
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ---- Web Frontend ----
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+    container_name: aif-web
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    depends_on:
+      - api

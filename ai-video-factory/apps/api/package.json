@@ -1,0 +1,51 @@
+{
+  "name": "@ai-video-factory/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main",
+    "start:prod": "node dist/main",
+    "lint": "eslint src",
+    "test": "jest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/bullmq": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
+    "bullmq": "^5.0.0",
+    "ioredis": "^5.0.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0",
+    "@ai-video-factory/shared-types": "workspace:*",
+    "@ai-video-factory/db": "workspace:*",
+    "@ai-video-factory/analysis-service": "workspace:*",
+    "@ai-video-factory/script-service": "workspace:*",
+    "@ai-video-factory/content-service": "workspace:*",
+    "@ai-video-factory/media-service": "workspace:*",
+    "@ai-video-factory/subtitle-service": "workspace:*",
+    "@ai-video-factory/render-service": "workspace:*",
+    "@ai-video-factory/trend-service": "workspace:*",
+    "@ai-video-factory/prompt-library": "workspace:*",
+    "@ai-video-factory/knowledge-sdk": "workspace:*",
+    "@ai-video-factory/storage-sdk": "workspace:*",
+    "@nestjs/websockets": "^11.0.0",
+    "@nestjs/platform-socket.io": "^11.0.0",
+    "socket.io": "^4.7.0",
+    "@anthropic-ai/sdk": "^0.40.0",
+    "openai": "^4.80.0",
+    "pg": "^8.13.0",
+    "drizzle-orm": "^0.38.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

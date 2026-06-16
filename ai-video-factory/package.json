@@ -1,0 +1,36 @@
+{
+  "name": "ai-video-factory",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "apps/worker/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "type-check": "turbo type-check"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/pg": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.0",
+    "ts-jest": "^29.2.0",
+    "turbo": "^2.5.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "minio": "^8.0.7",
+    "pg": "^8.21.0"
+  }
+}

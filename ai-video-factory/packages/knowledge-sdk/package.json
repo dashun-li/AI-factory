@@ -1,0 +1,25 @@
+{
+  "name": "@ai-video-factory/knowledge-sdk",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "type-check": "tsc --noEmit",
+    "seed": "node --import tsx src/seed.ts",
+    "seed:wipe": "WIPE=1 node --import tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@zilliz/milvus2-sdk-node": "^2.5.0",
+    "openai": "^4.80.0",
+    "@ai-video-factory/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.4.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}

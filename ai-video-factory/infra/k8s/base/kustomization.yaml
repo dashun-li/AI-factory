@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai-video-factory
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - api.yaml
+  - web.yaml
+  - workers.yaml
+  - databases.yaml
+  - ingress.yaml
+
+# Common labels applied to all resources
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: ai-video-factory
+      app.kubernetes.io/managed-by: kustomize
+
+# Reuse secret across overlays (overlays can override with their own secret)
+generatorOptions:
+  disableNameSuffixHash: true
+
+# Note: secrets.example.yaml is NOT included by default.
+# In production, use a sealed-secrets/external-secrets operator and include the resulting Secret here.

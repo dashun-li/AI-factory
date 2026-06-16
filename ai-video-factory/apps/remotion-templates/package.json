@@ -1,0 +1,29 @@
+{
+  "name": "@ai-video-factory/remotion-templates",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render src/index.tsx#VideoComposition out/test.mp4",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "remotion": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/player": "^4.0.0",
+    "@ai-video-factory/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "@types/jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,87 @@
+# GPU-accelerated AI services
+# Requires NVIDIA Container Toolkit + GPU driver
+# Usage: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
+
+services:
+  # ---- Faster-Whisper (Speech-to-Text) ----
+  faster-whisper:
+    build:
+      context: ./faster-whisper
+      dockerfile: Dockerfile
+    image: ai-video-factory/faster-whisper:latest
+    container_name: aif-faster-whisper
+    restart: unless-stopped
+    ports:
+      - "9001:8000"
+    environment:
+      - WHISPER__MODEL=large-v3
+      - WHISPER__COMPUTE_TYPE=int8
+      - WHISPER__DEVICE=auto
+    volumes:
+      - whisper_models:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # ---- WhisperX (Subtitle Alignment + Diarization) ----
+  whisperx:
+    build:
+      context: ./whisperx
+      dockerfile: Dockerfile
+    image: ai-video-factory/whisperx:latest
+    container_name: aif-whisperx
+    restart: unless-stopped
+    ports:
+      - "9002:8000"
+    environment:
+      - WHISPER__MODEL=large-v3
+      - WHISPER__COMPUTE_TYPE=float16
+      - WHISPER__DEVICE=cuda
+      - HF_TOKEN=${HF_TOKEN:-}
+    volumes:
+      - whisperx_models:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - subtitle
+
+  # ---- CosyVoice2 (TTS, production) ----
+  cosyvoice:
+    build:
+      context: ./cosyvoice
+      dockerfile: Dockerfile
+      args:
+        - COSYVOICE_REF=main
+    image: ai-video-factory/cosyvoice:latest
+    container_name: aif-cosyvoice
+    restart: unless-stopped
+    ports:
+      - "9003:8000"
+    environment:
+      - COSYVOICE__DEVICE=cuda
+      - PRETRAINED_MODELS_DIR=/workspace/pretrained_models
+    volumes:
+      - cosyvoice_models:/workspace/pretrained_models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - tts-production
+
+volumes:
+  whisper_models:
+  whisperx_models:
+  cosyvoice_models:
